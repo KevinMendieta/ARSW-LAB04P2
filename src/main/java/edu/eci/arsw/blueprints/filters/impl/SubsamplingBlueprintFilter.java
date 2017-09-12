@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 
 /**
  *
- * @author 2118677
+ * @author KevinMendieta
  */
-@Service
+//@Service
 public class SubsamplingBlueprintFilter implements BlueprintFilter {
 
     @Override
@@ -23,7 +23,7 @@ public class SubsamplingBlueprintFilter implements BlueprintFilter {
         Blueprint newBlueprint = new Blueprint(blueprint.getAuthor(), blueprint.getName());
         List<Point> points = blueprint.getPoints();
         for (int i = 0; i < points.size(); i++) {
-            if(i % 2 != 0) newBlueprint.addPoint(points.get(i));
+            if(i % 2 == 0) newBlueprint.addPoint(points.get(i));
         }
         return newBlueprint;
     }

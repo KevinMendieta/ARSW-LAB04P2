@@ -12,10 +12,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 /**
- *
- * @author 2118677
+ * @author KevinMendieta
  */
-
+@Service
 public class RedundancyBlueprintFilter implements BlueprintFilter {
 
     @Override
@@ -24,7 +23,7 @@ public class RedundancyBlueprintFilter implements BlueprintFilter {
         List<Point> points = blueprint.getPoints();
         if(points.size() > 0){
             newBlueprint.addPoint(points.get(0));
-            for (int i = 1; i < points.size(); i++){
+            for (int i = 1; i < points.size(); i++){                
                 if(!newBlueprint.getPoints().get(newBlueprint.getPoints().size() - 1).equals(points.get(i))) {
                     newBlueprint.addPoint(points.get(i));
                 }
