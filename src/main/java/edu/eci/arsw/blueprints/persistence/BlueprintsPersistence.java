@@ -56,6 +56,13 @@ public interface BlueprintsPersistence {
      */
     public void updateBlueprint(String authorName, String blueprintName, Point point) throws BlueprintNotFoundException;
     
+    /**
+     * Update a blueprint with given points.
+     * @param authorName blueprint's author name.
+     * @param blueprintName blueprint's name.
+     * @param points List with the new points for the blueprint.
+     * @throws BlueprintNotFoundException if the blueprint does not exist.
+     */
     public void updateBlueprint(String authorName, String blueprintName, List<Point> points) throws BlueprintNotFoundException;
     
 }

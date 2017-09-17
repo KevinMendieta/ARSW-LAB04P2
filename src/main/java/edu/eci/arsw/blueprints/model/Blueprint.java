@@ -18,7 +18,7 @@ public class Blueprint {
     public Blueprint(String author,String name,Point[] pnts){
         this.author=author;
         this.name=name;
-        points=Arrays.asList(pnts);
+        points=new ArrayList<>(Arrays.asList(pnts));
     }
          
     public Blueprint(String author, String name){
@@ -28,7 +28,13 @@ public class Blueprint {
     }
 
     public Blueprint() {
-    }    
+    }
+    
+    public void setPoints(List<Point> points){
+        for(Point point : points){
+            addPoint(point);
+        }
+    }
     
     public String getName() {
         return name;
