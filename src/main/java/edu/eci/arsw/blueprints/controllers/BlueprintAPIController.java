@@ -6,10 +6,12 @@
 package edu.eci.arsw.blueprints.controllers;
 
 import edu.eci.arsw.blueprints.model.Blueprint;
+import edu.eci.arsw.blueprints.model.Point;
 import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
 import edu.eci.arsw.blueprints.persistence.BlueprintPersistenceException;
 import edu.eci.arsw.blueprints.services.BlueprintsServices;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,12 +71,34 @@ public class BlueprintAPIController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> manejadorPostRecursoXX(@RequestBody Blueprint bp) {
+    public ResponseEntity<?> addNewBlueprint(@RequestBody Blueprint bp) {
         try {
-            //registrar dato
+            //register data
             blueprintServices.addNewBlueprint(bp);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (BlueprintPersistenceException e) {
+            Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+    
+    @RequestMapping(method = RequestMethod.PUT, path = "/{authorName}/{bpname}")
+    public ResponseEntity<?> updateBlueprint(@PathVariable String authorName, @PathVariable String bpname, @RequestBody Point point){
+        try{
+            blueprintServices.updateBlueprint(authorName, bpname, point);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (BlueprintNotFoundException e){
+            Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+    
+    @RequestMapping(method = RequestMethod.PUT, path = "/{authorName}/{bpname}")
+    public ResponseEntity<?> updateBlueprint(@PathVariable String authorName, @PathVariable String bpname, @RequestBody List<Point> points){
+        try{
+            blueprintServices.updateBlueprint(authorName, bpname, points);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (BlueprintNotFoundException e){
             Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }

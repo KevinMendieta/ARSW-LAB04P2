@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
     @Override
     public void saveBlueprint(Blueprint bp) throws BlueprintPersistenceException {
         if (blueprints.containsKey(new Tuple<>(bp.getAuthor(),bp.getName()))){
-            throw new BlueprintPersistenceException("The given blueprint already exists: "+bp);
+            throw new BlueprintPersistenceException("The given blueprint already exists: " + bp);
         }
         else{
             blueprints.put(new Tuple<>(bp.getAuthor(),bp.getName()), bp);
@@ -53,25 +54,55 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
 
     @Override
     public Blueprint getBlueprint(String author, String bprintname) throws BlueprintNotFoundException {
-        return blueprints.get(new Tuple<>(author, bprintname));
+        Blueprint result = null;
+        if (blueprints.containsKey(new Tuple<>(author,bprintname))){
+            result = blueprints.get(new Tuple<>(author, bprintname));
+        }else{
+            throw new BlueprintNotFoundException("There is no blueprint with the given data: " + author + ", " + bprintname);
+        }
+        return result;
     }
     
     @Override
     public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException{
         Set<Blueprint> result = new LinkedHashSet<>();
-        for(Tuple<String, String> tuple : blueprints.keySet()){
-            if (tuple.getElem1().equals(author)) result.add(blueprints.get(tuple));
+        for (Tuple<String, String> tuple : blueprints.keySet()) {
+            if (tuple.getElem1().equals(author)) {
+                result.add(blueprints.get(tuple));
+            }
         }
+        if (result.isEmpty()) throw new BlueprintNotFoundException("There are no blueprints with the given author: " + author);
         return result;
     }
 
     @Override
     public Set<Blueprint> getAllBlueprints() {
         HashSet<Blueprint> result = new HashSet<>();
-        for(Blueprint values : blueprints.values()){
+        for (Blueprint values : blueprints.values()) {
             result.add(values);
         }
         return result;
+    }
+    
+    @Override
+    public void updateBlueprint(String authorName, String blueprintName, Point point) throws BlueprintNotFoundException {
+        if (blueprints.containsKey(new Tuple<>(authorName, blueprintName))) {
+            blueprints.get(new Tuple<>(authorName, blueprintName)).addPoint(point);
+        } else {
+            throw new BlueprintNotFoundException("There is no blueprint whith the given data: " + authorName + ", " + blueprintName);
+        } 
+    }
+    
+    @Override
+    public void updateBlueprint(String authorName, String blueprintName, List<Point> points) throws BlueprintNotFoundException {
+        if (blueprints.containsKey(new Tuple<>(authorName, blueprintName))) {
+            Blueprint bp = blueprints.get(new Tuple<>(authorName, blueprintName));
+            for (Point point : points) {
+                 bp.addPoint(point);
+            }
+        } else {
+            throw new BlueprintNotFoundException("There is no blueprint whith the given data: " + authorName + ", " + blueprintName);
+        }
     }
 
 }
